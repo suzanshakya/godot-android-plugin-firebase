@@ -108,7 +108,7 @@ public class Firebase extends GodotPlugin {
 
         Utils.logDebug("Firebase.init() called");
 
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 //String fileName = "res://assets/godot-firebase-config.json";
                 //String data = Utils.readFromFile(fileName, godot.getContext());
@@ -217,7 +217,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void admob_banner_show(final boolean show) {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 AdMob.getInstance(activity).bannerShow(show);
             }
@@ -229,7 +229,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void admob_interstitial_show() {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 AdMob.getInstance(activity).interstitialShow();
             }
@@ -237,7 +237,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void admob_rewarded_video_show() {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 AdMob.getInstance(activity).rewardedVideoShow();
             }
@@ -245,7 +245,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void admob_rewarded_video_request_status() {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 AdMob.getInstance(activity).rewardedVideoRequestStatus();
             }
@@ -259,7 +259,7 @@ public class Firebase extends GodotPlugin {
             return;
         }
 
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 Analytics.getInstance(activity).sendCustom(key, value);
             }
@@ -271,7 +271,7 @@ public class Firebase extends GodotPlugin {
             return;
         }
 
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 Analytics.getInstance(activity).sendEvents(key, data);
             }
@@ -281,7 +281,7 @@ public class Firebase extends GodotPlugin {
 
     // ===== Authentication
     public void authentication_get_id_token() {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 Authentication.getInstance(activity).getIdToken();
             }
@@ -290,7 +290,7 @@ public class Firebase extends GodotPlugin {
 
     // ----- Google
     public void authentication_google_sign_in() {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 Authentication.getInstance(activity).signIn();
             }
@@ -298,7 +298,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void authentication_google_sign_out() {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             public void run() {
                 Authentication.getInstance(activity).signOut();
             }
@@ -316,7 +316,7 @@ public class Firebase extends GodotPlugin {
 
     // ===== Firestore
     public void firestore_add_document(final String name, final Dictionary data) {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Firestore.getInstance(activity).addDocument(name, data);
@@ -325,7 +325,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void firestore_load_document(final String name) {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Firestore.getInstance(activity).loadDocuments(name, -1);
@@ -334,7 +334,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void firestore_set_document_data(final String colName, final String docName, final Dictionary data) {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Firestore.getInstance(activity).setDocumentData(colName, docName, data);
@@ -345,7 +345,7 @@ public class Firebase extends GodotPlugin {
 
     // ===== Storage
     public void storage_upload(final String fileName) {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Storage.getInstance(activity).upload(fileName);
@@ -354,7 +354,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void storage_download(final String fileName) {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Storage.getInstance(activity).download(fileName);
@@ -365,7 +365,7 @@ public class Firebase extends GodotPlugin {
 
     // ===== Cloud Messaging
     public void cloudmessaging_subscribe_to_topic(final String topicName) {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 CloudMessaging.getInstance(activity).subscribeToTopic(topicName);
@@ -374,7 +374,7 @@ public class Firebase extends GodotPlugin {
     }
 
     public void cloudmessaging_unsubscribe_from_topic(final String topicName) {
-        activity.runOnUiThread(new Runnable() {
+        godot.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 CloudMessaging.getInstance(activity).unsubscribeFromTopic(topicName);
