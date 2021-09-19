@@ -36,7 +36,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Firebase extends GodotPlugin {
 
-    // private static Activity activity = null;
+    private static Activity activity = null;
     private static Godot godot = null;
     private static JSONObject firebaseConfig = new JSONObject();
     private FirebaseApp firebaseApp = null;
@@ -47,6 +47,7 @@ public class Firebase extends GodotPlugin {
     public Firebase(Godot godot) {
         super(godot);
         this.godot = godot;
+        activity = godot.getActivity();
     }
 
     public static JSONObject getConfig() {
@@ -107,16 +108,39 @@ public class Firebase extends GodotPlugin {
 
         Utils.logDebug("Firebase.init() called");
 
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                String fileName = "res://godot-firebase-config.json";
-                String data = Utils.readFromFile(fileName, godot);
-                data = data.replaceAll("\\s+", "");
-                if (data == null || data.isEmpty()) {
-                    Utils.logDebug("read data null or empty? " + data);
-                } else {
-                    Utils.logDebug("read data not empty");
-                }
+                //String fileName = "res://assets/godot-firebase-config.json";
+                //String data = Utils.readFromFile(fileName, godot.getContext());
+                //data = data.replaceAll("\\s+", "");
+                //if (data == null || data.isEmpty()) {
+                //    Utils.logDebug("assets read data null or empty? " + data);
+                //} else {
+                //    Utils.logDebug("read data not empty");
+                //}
+                String data = "{\n" +
+                        "\t\"Analytics\": false,\n" +
+                        "\t\"AdMob\": false,\n" +
+                        "\t\"AdMobMediationUnity\": false,\n" +
+                        "\t\"AdMobAdUnits\": {\n" +
+                        "\t\t\"TestAds\": false,\n" +
+                        "\t\t\"AppId\": \"ca-app-pub-1864389867652805~8916453299\",\n" +
+                        "\t\t\"Banner\": false,\n" +
+                        "\t\t\"BannerId\": \"ca-app-pub-1864389867652805/3909353408\",\n" +
+                        "\t\t\"BannerGravity\": \"TOP\",\n" +
+                        "\t\t\"Interstitial\": false,\n" +
+                        "\t\t\"InterstitialId\": \"ca-app-pub-ADMOB_INTERSTITIAL_AD_UNIT_ID\",\n" +
+                        "\t\t\"RewardedVideo\": false,\n" +
+                        "\t\t\"RewardedVideoId\": \"ca-app-pub-ADMOB_REWARDEDVIDEO_AD_UNIT_ID\"\n" +
+                        "\t},\n" +
+                        "\t\"Authentication\" : true,\n" +
+                        "\t\"Firestore\" : false,\n" +
+                        "\t\"Storage\" : false,\n" +
+                        "\t\"InAppMessaging\" : {\n" +
+                        "\t\t\"hint\" : \"This will always be enabled. To remove In-App Messaging edit gradle.conf and remove implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.3'\"\n" +
+                        "\t},\n" +
+                        "\t\"CloudMessaging\" : false\n" +
+                        "}";
 
                 Utils.setScriptInstance(script_id);
                 initFirebase(data);
@@ -128,7 +152,7 @@ public class Firebase extends GodotPlugin {
         Utils.logDebug("Firebase initializing");
 
         JSONObject config = null;
-        firebaseApp = FirebaseApp.initializeApp(godot);
+        firebaseApp = FirebaseApp.initializeApp(activity);
 
         if (data.length() <= 0) {
             Utils.logDebug("Firebase initialized.");
@@ -145,31 +169,31 @@ public class Firebase extends GodotPlugin {
         // ===== AdMob
         if (config.optBoolean("AdMob", false)) {
             Utils.logDebug("AdMob initializing");
-            AdMob.getInstance(godot).init(firebaseApp, layout);
+            AdMob.getInstance(activity).init(firebaseApp, layout);
         }
 
         // ===== Analytics
         if (config.optBoolean("Analytics", false)) {
             Utils.logDebug("Analytics initializing");
-            Analytics.getInstance(godot).init(firebaseApp);
+            Analytics.getInstance(activity).init(firebaseApp);
         }
 
         // ===== Authentication
         if (config.optBoolean("Authentication", false)) {
             Utils.logDebug("Authentication initializing");
-            Authentication.getInstance(godot).init(firebaseApp);
+            Authentication.getInstance(activity).init(firebaseApp);
         }
 
         // ===== Firestore
         if (config.optBoolean("Firestore", false)) {
             Utils.logDebug("Firestore initializing");
-            Firestore.getInstance(godot).init(firebaseApp);
+            Firestore.getInstance(activity).init(firebaseApp);
         }
 
         // ===== Storage
         if (config.optBoolean("Storage", false)) {
             Utils.logDebug("Storage initializing");
-            Storage.getInstance(godot).init(firebaseApp, godot);
+            Storage.getInstance(activity).init(firebaseApp, godot);
         }
 
         // ===== InAppMessaging
@@ -181,7 +205,7 @@ public class Firebase extends GodotPlugin {
         // ===== Cloud Messaging
         if (config.optBoolean("CloudMessaging", false)) {
             Utils.logDebug("CloudMessaging initializing");
-            CloudMessaging.getInstance(godot).init(firebaseApp);
+            CloudMessaging.getInstance(activity).init(firebaseApp);
         }
 
         Utils.logDebug("Firebase initialized");
@@ -189,41 +213,41 @@ public class Firebase extends GodotPlugin {
 
     // ===== AdMob
     public boolean admob_banner_is_loaded() {
-        return AdMob.getInstance(godot).bannerIsLoaded();
+        return AdMob.getInstance(activity).bannerIsLoaded();
     }
 
     public void admob_banner_show(final boolean show) {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                AdMob.getInstance(godot).bannerShow(show);
+                AdMob.getInstance(activity).bannerShow(show);
             }
         });
     }
 
     public Dictionary admob_banner_get_size() {
-        return AdMob.getInstance(godot).bannerGetSize();
+        return AdMob.getInstance(activity).bannerGetSize();
     }
 
     public void admob_interstitial_show() {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                AdMob.getInstance(godot).interstitialShow();
+                AdMob.getInstance(activity).interstitialShow();
             }
         });
     }
 
     public void admob_rewarded_video_show() {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                AdMob.getInstance(godot).rewardedVideoShow();
+                AdMob.getInstance(activity).rewardedVideoShow();
             }
         });
     }
 
     public void admob_rewarded_video_request_status() {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                AdMob.getInstance(godot).rewardedVideoRequestStatus();
+                AdMob.getInstance(activity).rewardedVideoRequestStatus();
             }
         });
     }
@@ -235,9 +259,9 @@ public class Firebase extends GodotPlugin {
             return;
         }
 
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                Analytics.getInstance(godot).sendCustom(key, value);
+                Analytics.getInstance(activity).sendCustom(key, value);
             }
         });
     }
@@ -247,9 +271,9 @@ public class Firebase extends GodotPlugin {
             return;
         }
 
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                Analytics.getInstance(godot).sendEvents(key, data);
+                Analytics.getInstance(activity).sendEvents(key, data);
             }
         });
     }
@@ -257,63 +281,63 @@ public class Firebase extends GodotPlugin {
 
     // ===== Authentication
     public void authentication_get_id_token() {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                Authentication.getInstance(godot).getIdToken();
+                Authentication.getInstance(activity).getIdToken();
             }
         });
     }
 
     // ----- Google
     public void authentication_google_sign_in() {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                Authentication.getInstance(godot).signIn();
+                Authentication.getInstance(activity).signIn();
             }
         });
     }
 
     public void authentication_google_sign_out() {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             public void run() {
-                Authentication.getInstance(godot).signOut();
+                Authentication.getInstance(activity).signOut();
             }
         });
     }
 
     public boolean authentication_google_is_connected() {
-        return Authentication.getInstance(godot).isConnected();
+        return Authentication.getInstance(activity).isConnected();
     }
 
     public String authentication_google_get_user() {
-        return Authentication.getInstance(godot).getUserDetails();
+        return Authentication.getInstance(activity).getUserDetails();
     }
     // ===== Authentication ===========================================================================================
 
     // ===== Firestore
     public void firestore_add_document(final String name, final Dictionary data) {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Firestore.getInstance(godot).addDocument(name, data);
+                Firestore.getInstance(activity).addDocument(name, data);
             }
         });
     }
 
     public void firestore_load_document(final String name) {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Firestore.getInstance(godot).loadDocuments(name, -1);
+                Firestore.getInstance(activity).loadDocuments(name, -1);
             }
         });
     }
 
     public void firestore_set_document_data(final String colName, final String docName, final Dictionary data) {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Firestore.getInstance(godot).setDocumentData(colName, docName, data);
+                Firestore.getInstance(activity).setDocumentData(colName, docName, data);
             }
         });
     }
@@ -321,19 +345,19 @@ public class Firebase extends GodotPlugin {
 
     // ===== Storage
     public void storage_upload(final String fileName) {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Storage.getInstance(godot).upload(fileName);
+                Storage.getInstance(activity).upload(fileName);
             }
         });
     }
 
     public void storage_download(final String fileName) {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Storage.getInstance(godot).download(fileName);
+                Storage.getInstance(activity).download(fileName);
             }
         });
     }
@@ -341,19 +365,19 @@ public class Firebase extends GodotPlugin {
 
     // ===== Cloud Messaging
     public void cloudmessaging_subscribe_to_topic(final String topicName) {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                CloudMessaging.getInstance(godot).subscribeToTopic(topicName);
+                CloudMessaging.getInstance(activity).subscribeToTopic(topicName);
             }
         });
     }
 
     public void cloudmessaging_unsubscribe_from_topic(final String topicName) {
-        godot.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                CloudMessaging.getInstance(godot).unsubscribeFromTopic(topicName);
+                CloudMessaging.getInstance(activity).unsubscribeFromTopic(topicName);
             }
         });
     }
@@ -361,25 +385,25 @@ public class Firebase extends GodotPlugin {
 
     // Forwarded callbacks you can reimplement, as SDKs often need them.
     public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
-        Authentication.getInstance(godot).onActivityResult(requestCode, resultCode, data);
+        Authentication.getInstance(activity).onActivityResult(requestCode, resultCode, data);
     }
 
     public void onMainRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
     }
 
     public void onMainPause() {
-        AdMob.getInstance(godot).onPause();
-        Authentication.getInstance(godot).onPause();
+        AdMob.getInstance(activity).onPause();
+        Authentication.getInstance(activity).onPause();
     }
 
     public void onMainResume() {
-        AdMob.getInstance(godot).onResume();
-        Authentication.getInstance(godot).onResume();
+        AdMob.getInstance(activity).onResume();
+        Authentication.getInstance(activity).onResume();
     }
 
     public void onMainDestroy() {
-        AdMob.getInstance(godot).onStop();
-        Authentication.getInstance(godot).onStop();
+        AdMob.getInstance(activity).onStop();
+        Authentication.getInstance(activity).onStop();
     }
 
     @Override
